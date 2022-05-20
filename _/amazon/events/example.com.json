@@ -16,7 +16,7 @@
   {
     "url": "https://get.webgl.org",
     "expected": {
-      "pdf": "/tmp/artifacts/webgl.pdf"
+      "pdf": "webgl.pdf"
     }
   }
 ]

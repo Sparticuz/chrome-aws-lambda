@@ -7,7 +7,8 @@ const { constants } = require("fs");
 exports.handler = async (event, context) => {
   let browser = null;
 
-  await access('/tmp/artifacts', constants.F_OK).catch(async ()=>{await mkdir('/tmp/artifacts')});
+  // await access('/tmp/artifacts', constants.F_OK).catch(async ()=>{await mkdir('/tmp/artifacts')});
+  // console.log('banana');
 
   try {
     const browser = await chromium.puppeteer.launch({
