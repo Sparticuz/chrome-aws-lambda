@@ -46,7 +46,7 @@ exports.handler = async (event, context) => {
 
           if (job.expected.hasOwnProperty('pdf') === true) {
             const pdf = await page.pdf();
-            console.log(pdf.toString('base64'));
+            // console.log(pdf.toString('base64'));
             await writeFile(job.expected.pdf, pdf);
 
             try {
