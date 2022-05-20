@@ -63,7 +63,7 @@ jobs:
       run: unzip chrome_aws_lambda.zip -d _/amazon/code
 
     - name: Invoke Lambda on SAM
-      run: sam local invoke --template _/amazon/template.yml --region us-east-1 --event _/amazon/events/${{ matrix.event }}.json node${{ matrix.version }} 2>&1 | (grep 'Error' && exit 1 || exit 0)
+      run: sam local invoke --template _/amazon/template.yml --region us-east-1 --event _/amazon/events/${{ matrix.event }}.json node${{ matrix.version }}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
