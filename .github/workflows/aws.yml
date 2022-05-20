@@ -82,7 +82,7 @@ jobs:
     - name: Test on Node
       run: cd _/github && npm install
 
-    - run: node handler.js
+    - run: node _/github/handler.js
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
