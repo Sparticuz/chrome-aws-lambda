@@ -40,7 +40,7 @@ exports.handler = async (event, context) => {
           }
 
           if (job.expected.hasOwnProperty('pdf') === true) {
-            writeFile(job.expected.pdf, (await page.pdf())).then(ok());
+            writeFile(job.expected.pdf, (await page.pdf())).then(()=>ok());
           }
         }
       }
