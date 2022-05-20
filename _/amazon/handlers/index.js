@@ -43,9 +43,14 @@ exports.handler = async (event, context) => {
           }
 
           if (job.expected.hasOwnProperty('pdf') === true) {
-            writeFile(job.expected.pdf, await page.pdf()).then(() => {
-              ok((access(job.expected.pdf, constants.F_OK).then(()=>true).catch(()=>false)), `PDF Failed to write`);
+            await writeFile(job.expected.pdf, await page.pdf());
+
+            await access(job.expected.pdf, constants.F_OK).then(()=>{
+              console.log('file written');
+            }).catch((error)=> {
+              console.log("file not written", error);
             });
+            ok(true, `PDF Failed to write`);
           }
         }
       }
