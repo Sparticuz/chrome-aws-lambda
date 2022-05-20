@@ -80,7 +80,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Test on Node
-      run: cd _/github && npm install && node handler.js
+      run: cd _/github && npm install
+
+    - run: node handler.js
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
