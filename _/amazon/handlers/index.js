@@ -7,7 +7,7 @@ const { constants } = require("fs");
 exports.handler = async (event, context) => {
   let browser = null;
 
-  await mkdir('/tmp/artifacts');
+  await access('/tmp/artifacts', constants.F_OK).catch(async ()=>{await mkdir('/tmp/artifacts')});
 
   try {
     const browser = await chromium.puppeteer.launch({
@@ -43,8 +43,9 @@ exports.handler = async (event, context) => {
           }
 
           if (job.expected.hasOwnProperty('pdf') === true) {
-            await writeFile(job.expected.pdf, await page.pdf());
-            ok((await access(job.expected.pdf, constants.F_OK).then(()=>true).catch(()=>false)), `PDF Failed to write`);
+            writeFile(job.expected.pdf, await page.pdf()).then(() => {
+              ok((access(job.expected.pdf, constants.F_OK).then(()=>true).catch(()=>false)), `PDF Failed to write`);
+            });
           }
         }
       }
