@@ -67,7 +67,6 @@ jobs:
 
   github:
     name: Node
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -81,7 +80,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Test on Node
-      run: cd _/github && npm install && node _/github/handler.js
+      run: cd _/github && npm install && node handler.js
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
