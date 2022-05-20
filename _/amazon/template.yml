@@ -6,12 +6,20 @@ Globals:
     Timeout: 30
 
 Resources:
+  layer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+        LayerName: sparticuz-chrome-aws-lambda
+        ContentUri: code/
+        CompatibleRuntimes:
+          - nodejs14.x
+          - nodejs16.x
 
   node14:
     Type: AWS::Serverless::Function
     Properties:
       Layers:
-        - arn:aws:lambda:us-east-1:863441837526:layer:sparticuz-chrome-aws-lambda:2
+        - !Ref layer
       Handler: handlers/index.handler
       Runtime: nodejs14.x
       Policies:
@@ -20,8 +28,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Layers:
-        - arn:aws:lambda:us-east-1:863441837526:layer:sparticuz-chrome-aws-lambda:2
+        - !Ref layer
       Handler: handlers/index.handler
-      Runtime: nodejs16.x
+      Runtime: nodejs14.x
       Policies:
         - AWSLambdaBasicExecutionRole
