@@ -28,11 +28,16 @@ exports.handler = async (event, context) => {
       contexts.push(await browser.createIncognitoBrowserContext());
     }
 
+    console.log(event.length, contexts.length);
+
     for (let context of contexts) {
       const job = event.shift();
       const page = await context.defaultPage();
 
       if (job.hasOwnProperty('url') === true) {
+
+        console.log(job.url);
+
         await page.goto(job.url, { waitUntil: "networkidle0" });
 
         if (job.hasOwnProperty('expected') === true) {
@@ -46,6 +51,7 @@ exports.handler = async (event, context) => {
 
           if (job.expected.hasOwnProperty('pdf') === true) {
             const pdf = await page.pdf();
+            console.log(pdf.toString('base64'));
             await writeFile(job.expected.pdf, pdf);
 
             try {
