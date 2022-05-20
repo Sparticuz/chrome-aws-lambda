@@ -66,7 +66,7 @@ jobs:
       run: sam local invoke --template _/amazon/template.yml --region us-east-1 --event _/amazon/events/${{ matrix.event }}.json node${{ matrix.version }}
 
   github:
-    name: Lambda
+    name: Node
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -80,16 +80,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Download Layer Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: chrome_aws_lambda
-
-    - name: Provision Layer
-      run: unzip chrome_aws_lambda.zip -d _/amazon/code
-
     - name: Test on Node
-      run: node _/github/handler.js
+      run: cd _/github && npm install && node _/github/handler.js
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
