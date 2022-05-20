@@ -65,8 +65,8 @@ jobs:
     - name: Invoke Lambda on SAM
       run: sam local invoke --template _/amazon/template.yml --event _/amazon/events/${{ matrix.event }}.json node${{ matrix.version }} 2>&1 | (grep 'Error' && exit 1 || exit 0)
 
-    - name: Upload webgl Artifact
+    - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: webgl
-        path: /tmp/webgl.pdf
+        name: artifacts
+        path: /tmp/artifacts
