@@ -1,14 +1,15 @@
 const { ok } = require('assert');
 const { createHash } = require('crypto');
-const chromium = require('@sparticuz/chrome-aws-lambda');
+// const chromium = require('@sparticuz/chrome-aws-lambda');
+const chromium = require('/var/task/node_modules/@sparticuz/chrome-aws-lambda');
 const { writeFile, mkdir, access } = require('fs/promises');
 const { constants } = require("fs");
 
 exports.handler = async (event, context) => {
   let browser = null;
 
-  // await access('/tmp/artifacts', constants.F_OK).catch(async ()=>{await mkdir('/tmp/artifacts')});
-  // console.log('banana');
+  await access('/tmp/artifacts', constants.F_OK).catch(async ()=>{await mkdir('/tmp/artifacts')});
+  console.log('banana');
 
   try {
     const browser = await chromium.puppeteer.launch({
@@ -32,7 +33,7 @@ exports.handler = async (event, context) => {
       const page = await context.defaultPage();
 
       if (job.hasOwnProperty('url') === true) {
-        await page.goto(job.url, { waitUntil: ['domcontentloaded', 'load'] });
+        await page.goto(job.url, { waitUntil: "networkidle0" });
 
         if (job.hasOwnProperty('expected') === true) {
           if (job.expected.hasOwnProperty('title') === true) {
@@ -44,19 +45,22 @@ exports.handler = async (event, context) => {
           }
 
           if (job.expected.hasOwnProperty('pdf') === true) {
-            await writeFile(job.expected.pdf, await page.pdf());
+            const pdf = await page.pdf();
+            await writeFile(job.expected.pdf, pdf);
 
             try {
               await access(job.expected.pdf, constants.F_OK);
               console.log('file written');
             } catch(error) {
               console.log("file not written", error);
-              ok(true, `PDF Failed to write`);
+              ok(false, `PDF Failed to write`);
             };
 
           }
         }
       }
+
+      await page.close();
     }
   } catch (error) {
     throw error.message;
