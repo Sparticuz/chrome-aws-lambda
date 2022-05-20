@@ -1,7 +1,6 @@
 const { ok } = require('assert');
 const { createHash } = require('crypto');
-// const chromium = require('@sparticuz/chrome-aws-lambda');
-const chromium = require('../../../build/index');
+const chromium = require('@sparticuz/chrome-aws-lambda');
 const { writeFile, mkdir, access } = require('fs/promises');
 const { constants } = require("fs");
 
