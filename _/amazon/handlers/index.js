@@ -1,6 +1,7 @@
 const { ok } = require('assert');
 const { createHash } = require('crypto');
 const chromium = require('@sparticuz/chrome-aws-lambda');
+const { writeFile } = require('fs');
 
 exports.handler = async (event, context) => {
   let browser = null;
@@ -36,6 +37,10 @@ exports.handler = async (event, context) => {
 
           if (job.expected.hasOwnProperty('screenshot') === true) {
             ok(createHash('sha1').update((await page.screenshot()).toString('base64')).digest('hex') === job.expected.screenshot, `Screenshot assertion failed.`);
+          }
+
+          if (job.expected.hasOwnProperty('pdf') === true) {
+            writeFile(job.expected.pdf, (await page.pdf())).then(ok());
           }
         }
       }
