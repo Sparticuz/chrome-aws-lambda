@@ -1,6 +1,7 @@
 const { ok } = require('assert');
 const { createHash } = require('crypto');
-const chromium = require('@sparticuz/chrome-aws-lambda');
+// const chromium = require('@sparticuz/chrome-aws-lambda');
+const chromium = require('../../../build/index');
 const { writeFile, mkdir, access } = require('fs/promises');
 const { constants } = require("fs");
 
@@ -45,12 +46,14 @@ exports.handler = async (event, context) => {
           if (job.expected.hasOwnProperty('pdf') === true) {
             await writeFile(job.expected.pdf, await page.pdf());
 
-            await access(job.expected.pdf, constants.F_OK).then(()=>{
+            try {
+              await access(job.expected.pdf, constants.F_OK);
               console.log('file written');
-            }).catch((error)=> {
+            } catch(error) {
               console.log("file not written", error);
-            });
-            ok(true, `PDF Failed to write`);
+              ok(true, `PDF Failed to write`);
+            };
+
           }
         }
       }
