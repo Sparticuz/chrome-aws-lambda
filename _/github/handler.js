@@ -1,11 +1,11 @@
 const { ok } = require('assert');
 const { createHash } = require('crypto');
 const chromium = require('@sparticuz/chrome-aws-lambda');
-// const chromium = require('/var/task/node_modules/@sparticuz/chrome-aws-lambda');
 const { writeFile, mkdir, access } = require('fs/promises');
 const { constants } = require("fs");
+const events = require("../amazon/events/example.com.json");
 
-exports.handler = async (event, context) => {
+const handler = async (event, context) => {
   let browser = null;
 
   await access('/tmp/artifacts', constants.F_OK).catch(async ()=>{await mkdir('/tmp/artifacts')});
@@ -73,3 +73,5 @@ exports.handler = async (event, context) => {
 
   return true;
 };
+
+handler(events).then(()=>console.log("done"));
