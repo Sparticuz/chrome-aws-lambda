@@ -1,0 +1,11 @@
+# common extra inclusions
+**/*.d.ts
+**/@types/**
+**/*.@(yaml|yml)
+licen@(s|c)e*(.*)
+
+# required by puppeteer-core, not actually used
+**/devtools-protocol/**
+
+# it's not actually required at runtime
+.package-lock.json

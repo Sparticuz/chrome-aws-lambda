@@ -19,6 +19,7 @@
   "scripts": {
     "test": "make clean && make && make pretest && make test",
     "build": "rm -rf build && tsc -p tsconfig.json",
+    "minify": "node scripts/minify.js",
     "postversion": "git push && git push --tags && npm publish",
     "prepack": "npm run build",
     "preversion": "npm run build"
@@ -27,7 +28,9 @@
     "@types/node": "^16.11.49",
     "@types/tar-fs": "^2.0.1",
     "clean-modules": "^2.0.6",
+    "fast-glob": "^3.2.11",
     "puppeteer-core": "16.2.0",
+    "terser": "^5.14.2",
     "typescript": "^4.6.4"
   },
   "peerDependencies": {
