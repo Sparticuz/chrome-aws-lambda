@@ -4,9 +4,9 @@ import { KeysOfType, Prototype } from '../../../typings/chrome-aws-lambda';
 let Super: Prototype<Frame> = null;
 
 try {
-  Super = require('puppeteer/lib/cjs/puppeteer/common/FrameManager.js').Frame;
+  Super = require('puppeteer/lib/cjs/puppeteer/common/Frame.js').Frame;
 } catch (error) {
-  Super = require('puppeteer-core/lib/cjs/puppeteer/common/FrameManager.js').Frame;
+  Super = require('puppeteer-core/lib/cjs/puppeteer/common/Frame.js').Frame;
 }
 
 Super.prototype.clear = function (selector: string) {
