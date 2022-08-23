@@ -35,39 +35,43 @@
           - proto: all
             cidr_ip: 0.0.0.0/0
 
-    - name: Launching EC2 Instance
-      amazon.aws.ec2:
-        group: Chromium
-        image: "{{ image }}"
-        instance_type: c6a.12xlarge
+    - name: Request EC2 Instance
+      amazon.aws.ec2_instance:
+        availability_zone: "{{ region }}a"
+        count: 1
+        ebs_optimized: yes
+        image:
+          id: "{{ image }}"
         instance_initiated_shutdown_behavior: terminate
+        instance_type: c6a.12xlarge
         key_name: ansible
-        wait: yes
-        zone: "{{ region }}a"
-        spot_type: one-time
-        spot_price: "1.00"
-        spot_wait_timeout: 300
-        spot_launch_group: chromium
+        network:
+          assign_public_ip: yes
+          delete_on_termination: yes
+          groups: Chromium
         region: "{{ region }}"
+        security_group: Chromium
         state: present
+        tags:
+          Name: Chromium
         volumes:
           - device_name: /dev/xvda
-            delete_on_termination: true
-            volume_size: 128
-            volume_type: gp3
-        instance_tags:
-          Name: Chromium
+            ebs:
+              delete_on_termination: true
+              volume_type: io2
+              volume_size: 128
+              iops: 3000
       register: ec2
 
     - name: Registering Host
       add_host:
-        hostname: "{{ item.public_ip }}"
+        hostname: "{{ item.public_ip_address }}"
         groupname: aws
       with_items: "{{ ec2.instances }}"
 
     - name: Waiting for SSH
       wait_for:
-        host: "{{ item.public_ip }}"
+        host: "{{ item.public_ip_address }}"
         port: 22
         timeout: 120
         state: started
@@ -87,7 +91,7 @@
       become: true
       become_user: root
       shell: |
-        dnf update --releasever=2022.0.20220719 -y
+        dnf update --releasever=2022.0.20220810 -y
 
     - name: Installing Packages
       become: true
@@ -99,7 +103,6 @@
           - atk-devel
           - bc
           - bluez-libs-devel
-#          - brlapi-devel
           - bzip2-devel
           - cairo-devel
           - cmake
@@ -113,7 +116,7 @@
           - gperf
           - gtk3-devel
           - httpd
-          - java-latest-openjdk-devel
+          - java-17-amazon-corretto
           - libatomic
           - libcap-devel
           - libjpeg-devel
@@ -139,30 +142,6 @@
         state: latest
         update_cache: true
 
-    - name: Checking for NVMe SSD Device
-      become: true
-      become_user: root
-      stat:
-        path: /dev/nvme1n1
-      register: nvme
-
-    - name: Creating NVMe SSD Filesystem
-      become: true
-      become_user: root
-      community.general.system.filesystem:
-        dev: /dev/nvme1n1
-        fstype: xfs
-      when: nvme.stat.exists
-
-    - name: Mounting NVMe SSD Filesystem
-      become: true
-      become_user: root
-      shell: |
-        mount /dev/nvme1n1 /srv
-      args:
-        warn: false
-      when: nvme.stat.exists
-
     - name: Checking for Directory Structure
       stat:
         path: /srv/source/chromium
@@ -182,11 +161,6 @@
         - build
         - source
       when: structure.stat.exists != true
-
-    - name: Checking for Brotli
-      stat:
-        path: /usr/local/bin/brotli
-      register: brotli
 
     - name: Cloning Depot Tools
       git:
@@ -281,7 +255,7 @@
       become: true
       become_user: root
       shell: |
-        mount --types tmpfs --options size=48G,nr_inodes=128k,mode=1777 tmpfs /srv/source/chromium/src/out/Headless
+        mount --types tmpfs --options size=24G,nr_inodes=40k,mode=1777 tmpfs /srv/source/chromium/src/out/Headless
       args:
         warn: false
 
@@ -383,7 +357,7 @@
 
   tasks:
     - name: Terminating EC2 Instance
-      amazon.aws.ec2:
+      amazon.aws.ec2_instance:
         wait: yes
         state: absent
         instance_ids: '{{ ec2.instance_ids }}'
