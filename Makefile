@@ -19,7 +19,7 @@ test:
 	npm pack
 	mkdir -p nodejs/node_modules/@sparticuz/chrome-aws-lambda/
 	tar --directory nodejs/node_modules/@sparticuz/chrome-aws-lambda/ --extract --file sparticuz-chrome-aws-lambda-*.tgz --strip-components=1
-	npx clean-modules --directory nodejs --include "**/*.d.ts" --yes
+	npx clean-modules --directory nodejs --include "**/*.d.ts" "**/@types/**" "**/*.@(yaml|yml)" --yes
 	rm sparticuz-chrome-aws-lambda-*.tgz
 	mkdir -p $(dir $@)
 	zip -9 --filesync --move --recurse-paths $@ nodejs
