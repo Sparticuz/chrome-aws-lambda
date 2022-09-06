@@ -3,9 +3,14 @@
 import { access, createWriteStream, existsSync, mkdirSync, readdirSync, symlink, unlinkSync } from 'fs';
 import { IncomingMessage } from 'http';
 import LambdaFS from './lambdafs';
-import { join } from 'path';
+import { dirname, join } from 'path';
 import { PuppeteerNode, Viewport } from 'puppeteer-core';
-import { URL } from 'url';
+import { fileURLToPath, URL } from 'url';
+
+if(typeof __filename === 'undefined') {
+    globalThis.__filename = fileURLToPath(import.meta.url);
+    globalThis.__dirname = dirname(globalThis.__filename);
+}
 
 if (/^AWS_Lambda_nodejs(?:10|12|14|16)[.]x$/.test(process.env.AWS_EXECUTION_ENV) === true) {
   if (process.env.FONTCONFIG_PATH === undefined) {
