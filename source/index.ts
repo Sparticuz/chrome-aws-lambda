@@ -8,6 +8,7 @@ import { PuppeteerNode, Viewport } from 'puppeteer-core';
 import { fileURLToPath, URL } from 'url';
 
 if(typeof __filename === 'undefined') {
+    // @ts-expect-error typescript can't handle that this code might be run as a module as well as common js
     globalThis.__filename = fileURLToPath(import.meta.url);
     globalThis.__dirname = dirname(globalThis.__filename);
 }
