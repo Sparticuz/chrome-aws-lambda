@@ -37,13 +37,12 @@
 
     - name: Request EC2 Instance
       amazon.aws.ec2_instance:
-        availability_zone: "{{ region }}a"
         count: 1
         ebs_optimized: yes
         image:
           id: "{{ image }}"
         instance_initiated_shutdown_behavior: terminate
-        instance_type: c6a.12xlarge
+        instance_type: "{{ instance_size }}"
         key_name: ansible
         network:
           assign_public_ip: yes
