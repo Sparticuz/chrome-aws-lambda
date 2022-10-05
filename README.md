@@ -1,3 +1,6 @@
+# Deprecation Notice!!!
+## This package has been deprecated in favor of [@sparticuz/chromium](https://www.npmjs.com/package/@sparticuz/chromium). This new package doesn't need to be updated with each `puppeteer` version, and should have better compatibility with other test runners like `playwright`. Please see the migration guide [here](https://github.com/Sparticuz/chromium#migration-from-chrome-aws-lambda). Please migrate to this new package.
+
 # chrome-aws-lambda
 
 [![@sparticuz/chrome-aws-lambda](https://img.shields.io/npm/v/@sparticuz/chrome-aws-lambda.svg?style=for-the-badge)](https://www.npmjs.com/package/@sparticuz/chrome-aws-lambda)
