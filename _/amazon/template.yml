@@ -9,11 +9,13 @@ Resources:
   layer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-        LayerName: sparticuz-chrome-aws-lambda
-        ContentUri: code/
-        CompatibleRuntimes:
-          - nodejs14.x
-          - nodejs16.x
+      LayerName: schrome_arm
+      ContentUri: code/
+      CompatibleArchitectures:
+        - arm64
+      CompatibleRuntimes:
+        - nodejs14.x
+        - nodejs16.x
 
   node14:
     Type: AWS::Serverless::Function
@@ -22,6 +24,8 @@ Resources:
         - !Ref layer
       Handler: handlers/index.handler
       Runtime: nodejs14.x
+      Architectures:
+        - arm64
       Policies:
         - AWSLambdaBasicExecutionRole
         - AWSXRayDaemonWriteAccess
@@ -33,6 +37,8 @@ Resources:
         - !Ref layer
       Handler: handlers/index.handler
       Runtime: nodejs16.x
+      Architectures:
+        - arm64
       Policies:
         - AWSLambdaBasicExecutionRole
         - AWSXRayDaemonWriteAccess

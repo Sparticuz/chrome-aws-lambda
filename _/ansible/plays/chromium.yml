@@ -277,12 +277,12 @@
           is_official_build = true
           proprietary_codecs = true
           symbol_level = 0
-          target_cpu = "x64"
+          target_cpu = "arm64"
           target_os = "linux"
           use_brlapi = 0
           use_sysroot = true
           v8_symbol_level = 0
-          v8_target_cpu = "x64"
+          v8_target_cpu = "arm64"
         dest: /srv/source/chromium/src/out/Headless/args.gn
 
     - name: Generating Headless Chromium Configuration
@@ -305,9 +305,15 @@
         warn: false
       register: version
 
-    - name: Striping Symbols from Chromium Binary
+#    - name: Striping Symbols from Chromium Binary
+#      shell: |
+#        strip -o /srv/build/chromium/chromium-{{ version.stdout | quote }} out/Headless/headless_shell
+#      args:
+#        chdir: /srv/source/chromium/src
+
+    - name: Copy Chromium
       shell: |
-        strip -o /srv/build/chromium/chromium-{{ version.stdout | quote }} out/Headless/headless_shell
+        cp out/Headless/headless_shell /srv/build/chromium/chromium-{{ version.stdout | quote }}
       args:
         chdir: /srv/source/chromium/src
 

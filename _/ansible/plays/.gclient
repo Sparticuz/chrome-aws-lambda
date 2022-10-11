@@ -9,3 +9,4 @@ solutions = [
     },
   },
 ]
+target_cpu = ["arm64","x64"]
